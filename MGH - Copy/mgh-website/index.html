@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MGH — Home</title>
+  <!--META DESCRIPTION — used by search engines & link previews -->
+  <meta name="description" content="MGH — write a one-sentence summary of the company for search engines here." />
+
+  <!-- Fonts: Chakra Petch (headings), IBM Plex Sans (body), IBM Plex Mono (labels/data) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Animated blue network-node background-->
+  <canvas id="network-canvas"></canvas>
+
+  <!-- Scroll-linked 3D wireframe beacon (js/scene3d.js),-->
+  <div id="beacon-canvas-wrap"></div>
+
+  
+  <div id="page-loader" class="page-loader">
+    <div class="loader-inner">
+      <div class="loader-logo-wrap">
+        <span class="loader-ring r1"></span>
+        <span class="loader-ring r2"></span>
+        <span class="loader-ring r3"></span>
+        <span class="brand-mark"><img src="MGH Logo.jpg" alt="MGH"></span>
+      </div>
+      <p class="loader-label">Connecting…</p>
+    </div>
+  </div>
+
+  <!--HEADER / NAVBAR-->
+  <header class="site-header">
+    <nav class="navbar container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-mark"><img src="MGH Logo.jpg" alt="MGH"></span>
+        <span class="brand-name">MGH</span>
+      </a>
+
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="events.html" class="nav-link">Events</a></li>
+        <li><a href="products.html" class="nav-link">Products</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="scroll-progress-track">
+      <div id="scroll-progress-bar" class="scroll-progress-bar"></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== HERO ===================== -->
+    <section class="hero container">
+      <div class="hero-content">
+        <p class="eyebrow">// System online</p>
+
+        <!-- NAME -->
+        <h1 class="hero-title">MGH</h1>
+
+        <!--COMPANY SLOGAN -->
+        <p class="hero-slogan">VALUE FOR MONEY — TOMORROW BUILT TODAY</p>
+
+        <!-- QUICK COMPANY DESCRIPTION-->
+        <p class="hero-description">
+          Seychelles fastest growing ground up Tech buisness,
+          made by people foe the people!
+        </p>
+
+        <div class="hero-actions">
+          <a href="products.html" class="btn btn-primary">View products</a>
+          <a href="events.html" class="btn btn-ghost">See events</a>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="focus-areas container">
+      <p class="eyebrow">// What we do</p>
+      <h2>Focus areas</h2>
+      <div class="focus-grid">
+        <div class="focus-card">
+          <span class="focus-index">01</span>
+          
+          <h3>Software</h3>
+          <!--FOCUS AREA DESCRIPTION -->
+          <p>At MGH we work tirelessly to bring you the efficient software of tomorow, today!</p>
+        </div>
+        <div class="focus-card">
+          <span class="focus-index">02</span>
+          <h3>Devices</h3>
+          <p>MGH uses a vast collection of resources to achieve budget friendly top of line hardware of all kinds!</p>
+        </div>
+        <div class="focus-card">
+          <span class="focus-index">03</span>
+          <h3>Research</h3>
+          <p>We never stop in the pursuit of growth and knowledge, constantly pushing our boundaries allows us to better serve you!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ====== FOOTER ==-->
+  <footer class="site-footer container">
+    <!-- PLACEHOLDER: COMPANY NAME / YEAR -->
+    <p>&copy; 2026 MGH. All rights reserved.</p>
+    <p>Built for the network.</p>
+  </footer>
+
+  <!-- Three.js, loaded from a CDN, powers the scroll-linked 3D beacon -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/scene3d.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

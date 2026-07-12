@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MGH — Products</title>
+  <meta name="description" content="MGH — write a one-sentence summary of the company for search engines here." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <canvas id="network-canvas"></canvas>
+  <div id="beacon-canvas-wrap"></div>
+
+  <div id="page-loader" class="page-loader">
+    <div class="loader-inner">
+      <div class="loader-logo-wrap">
+        <span class="loader-ring r1"></span>
+        <span class="loader-ring r2"></span>
+        <span class="loader-ring r3"></span>
+        <span class="brand-mark"><img src="MGH Logo.jpg" alt="MGH"></span>
+      </div>
+      <p class="loader-label">Connecting…</p>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <nav class="navbar container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-mark"><img src="MGH Logo.jpg" alt="MGH"></span>
+        <span class="brand-name">MGH</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="events.html" class="nav-link">Events</a></li>
+        <li><a href="products.html" class="nav-link">Products</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="scroll-progress-track">
+      <div id="scroll-progress-bar" class="scroll-progress-bar"></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-header container">
+      <p class="eyebrow">// Product catalog</p>
+      <h1>Products</h1>
+      <!--PRODUCTS PAGE INTRO -->
+      <p class="page-subtitle">Software and devices built by MGH.</p>
+    </section>
+
+  
+    <section class="card-grid products-grid container">
+
+      <article class="card">
+        <div class="card-media">
+          <!--PRODUCT IMAGE
+              -->
+          <img src="assets/products/product-1-laptop.jpg" alt="MGH laptop" class="card-media-img">
+        </div>
+        <div class="card-body">
+          <!--CATEGORY TAG -->
+          <span class="card-tag">Device</span>
+          <!--PRODUCT NAME -->
+          <h3 class="card-title">MGH Laptop</h3>
+          <!--QUICK DESCRIPTION -->
+          <p class="card-desc">Get it all done with the Tech of tomorrow today!</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/products/product-2-ethernet-switch.jpg" alt="MGH 5-port Gigabit Ethernet switch" class="card-media-img">
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Device</span>
+          <h3 class="card-title">MGH Ethernet Switch</h3>
+          <p class="card-desc">Efficiency at your convenience </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/products/product-3-polo-shirt.jpg" alt="MGH branded polo shirt" class="card-media-img">
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Merch</span>
+          <h3 class="card-title">MGH Shirt</h3>
+          <p class="card-desc">Wear MGH wih pride and comfort</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/products/product-4-tumbler.jpg" alt="MGH branded tumbler" class="card-media-img">
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Merch</span>
+          <h3 class="card-title">MGH Cup</h3>
+          <p class="card-desc">For all your drinking needs</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/products/product-5-marcelin-creative-studio-logo.jpg" alt="Marcelin Creative Studio logo" class="card-media-img">
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Software</span>
+          <h3 class="card-title">MGH Creative Corner</h3>
+          <p class="card-desc">Let your creativity run free!</p>
+        </div>
+      </article>
+
+
+      <article class="card">
+        <div class="card-media">
+          <div class="media-placeholder"><span>Product image</span></div>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Device</span>
+          <h3 class="card-title">MGH Earbuds</h3>
+          <p class="card-desc">COMING SOON!</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media">
+          <div class="media-placeholder"><span>Product image</span></div>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">Device</span>
+          <h3 class="card-title">MGH Watch</h3>
+          <p class="card-desc">COMING SOON!</p>
+        </div>
+      </article>
+
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p>&copy; 2026 MGH. All rights reserved.</p>
+    <p>Built for the network.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/scene3d.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

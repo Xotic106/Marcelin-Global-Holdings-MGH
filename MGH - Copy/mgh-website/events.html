@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MGH — Events</title>
+  <meta name="description" content="MGH — write a one-sentence summary of the company for search engines here." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <canvas id="network-canvas"></canvas>
+  <div id="beacon-canvas-wrap"></div>
+
+  <div id="page-loader" class="page-loader">
+    <div class="loader-inner">
+      <div class="loader-logo-wrap">
+        <span class="loader-ring r1"></span>
+        <span class="loader-ring r2"></span>
+        <span class="loader-ring r3"></span>
+        <span class="brand-mark"><img src="MGH Logo.jpg" alt="MGH"></span>
+      </div>
+      <p class="loader-label">Connecting…</p>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <nav class="navbar container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-mark"><img src="MGH Logo.jpg" alt="MGH"></span>
+        <span class="brand-name">MGH</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="events.html" class="nav-link">Events</a></li>
+        <li><a href="products.html" class="nav-link">Products</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="scroll-progress-track">
+      <div id="scroll-progress-bar" class="scroll-progress-bar"></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-header container">
+      <p class="eyebrow">// Event log</p>
+      <h1>Events</h1>
+      <!--EVENTS PAGE INTRO -->
+      <p class="page-subtitle">Stay up to date with MGH's latest talks, launches, and meetups.</p>
+    </section>
+
+    <section class="card-grid container">
+
+      <article class="card">
+        <div class="card-media">
+          <!--EVENT IMAGE — replace with:
+               <img src="assets/events/event-1.jpg" alt="Event name" class="card-media-img"> -->
+          <img src="assets/events/event-1.jpg" alt="MGH representative at a Seychelles Made ministry event" class="card-media-img">
+        </div>
+        <div class="card-body">
+          <!--DATE & TIME -->
+          <time class="card-datetime" datetime="2026-08-14T18:00">June 28, 2026</time>
+          <!--EVENT TITLE -->
+          <h3 class="card-title">MGH official demonstration with Seychelles made.</h3>
+          <!--QUICK DESCRIPTION -->
+          <p class="card-desc">MGH continues to grow with itd recent exposure to "Seychelles made".</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/events/event-2.jpg" alt="MGH team member at the Seychelles Made exhibition booth" class="card-media-img">
+        </div>
+        <div class="card-body">
+          <time class="card-datetime" datetime="2026-09-02T09:30">June 28, 2026</time>
+          <h3 class="card-title">Recognition is the First step!</h3>
+          <p class="card-desc">"Seychelles made" officials recognises MGH's authenticity and vision! </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/events/event-3.jpg" alt="MGH team member working on an MGH laptop" class="card-media-img">
+        </div>
+        <div class="card-body">
+          <time class="card-datetime" datetime="2026-09-18T13:00">May 20, 2026</time>
+          <h3 class="card-title">Here for you!</h3>
+          <p class="card-desc">MGH is proud and honored to announce its first customers, hinting at a bright future!</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/events/event-4.jpg" alt="MGH team reviewing a laptop setup together" class="card-media-img">
+        </div>
+        <div class="card-body">
+          <time class="card-datetime" datetime="2026-10-05T17:00">May 12, 2026</time>
+          <h3 class="card-title">Show it off!</h3>
+          <p class="card-desc">Selected Tech enthusiasts check out the all new MGH laptop.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/events/event-5.jpg" alt="MGH laptop handover at a Seychelles Made event" class="card-media-img">
+        </div>
+        <div class="card-body">
+          <time class="card-datetime" datetime="2026-10-22T10:00">June 29, 2026</time>
+          <h3 class="card-title">All starts with one step</h3>
+          <p class="card-desc">MGH was proud to handover its laptop to "Seychelles made" a testament to hardwork and dreaming big.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/events/event-6.jpg" alt="MGH team in a planning meeting" class="card-media-img">
+        </div>
+        <div class="card-body">
+          <time class="card-datetime" datetime="2026-11-11T18:30">March 11, 2026</time>
+          <h3 class="card-title">The first of many meetings!</h3>
+          <p class="card-desc">A meetup discussing MGH, its products and potential as a rising company.</p>
+        </div>
+      </article>
+
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p>&copy; 2026 MGH. All rights reserved.</p>
+    <p>Built for the network.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/scene3d.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MGH — Contact</title>
+  <meta name="description" content="MGH — write a one-sentence summary of the company for search engines here." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <canvas id="network-canvas"></canvas>
+  <div id="beacon-canvas-wrap"></div>
+
+  <div id="page-loader" class="page-loader">
+    <div class="loader-inner">
+      <div class="loader-logo-wrap">
+        <span class="loader-ring r1"></span>
+        <span class="loader-ring r2"></span>
+        <span class="loader-ring r3"></span>
+        <span class="brand-mark"><img src="MGH Logo.jpg" alt="MGH"></span>
+      </div>
+      <p class="loader-label">Connecting…</p>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <nav class="navbar container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-mark"><img src="MGH Logo.jpg" alt="MGH"></span>
+        <span class="brand-name">MGH</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="events.html" class="nav-link">Events</a></li>
+        <li><a href="products.html" class="nav-link">Products</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="scroll-progress-track">
+      <div id="scroll-progress-bar" class="scroll-progress-bar"></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-header container">
+      <p class="eyebrow">// Get in touch</p>
+      <h1>Contact</h1>
+      <!--CONTACT PAGE INTRO -->
+      <p class="page-subtitle">Reach out to MGH or follow along on social media.</p>
+    </section>
+
+    <section class="contact-grid container">
+
+      <!-- === CONTACT INFO ===========-->
+      <div class="contact-panel">
+        <h2>Contact information</h2>
+        <ul class="info-list">
+          <li>
+            <span class="info-label">Address</span>
+            <!--COMPANY ADDRESS -->
+            <span class="info-value">Houe of francis- De Quincy</span>
+          </li>
+          <li>
+            <span class="info-label">Email</span>
+            <!--COMPANY EMAIL -->
+            <a href="mailto:Daniogamael981@gmail.com" class="info-value">DanioGamael981@gmail.com</a>
+          </li>
+          <li>
+            <span class="info-label">Phone</span>
+            <!--COMPANY PHONE -->
+            <a href="tel:+248 2785550" class="info-value">+248 2785550</a>
+          </li>
+          <li>
+            <span class="info-label">Hours</span>
+            <!--BUSINESS HOURS -->
+            <span class="info-value">Monday – Friday, 9:00 AM – 4:00 PM</span>
+          </li>
+        </ul>
+      </div>
+
+      
+      <div class="contact-panel">
+        <h2>Follow MGH</h2>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="X (Twitter)"><span class="social-icon">X</span></a>
+          <a href="https://www.linkedin.com/in/danio-marcelin-993335400?utm_source=share_via&utm_content=profile&utm_medium=member_ios" class="social-link" aria-label="LinkedIn"><span class="social-icon">in</span></a>
+          <a href="https://wa.me/2482563394" class="social-link" aria-label="Whatsapp channel"><span class="social-icon">Wtspp</span></a>
+          <a href="https://www.instagram.com/marcelin_global_holdings_inc_?igsh=Y2wzZmdpd2ltMzFh&utm_source=qr" class="social-link" aria-label="Instagram"><span class="social-icon">ig</span></a>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p>&copy; 2026 MGH. All rights reserved.</p>
+    <p>Built for the network.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/scene3d.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
