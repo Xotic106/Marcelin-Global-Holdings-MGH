@@ -1,2 +1,2 @@
-# Marcelin-Global-Holdings-MGH
+# MGH Marcelin Global Holdings
 Pioneering technology firm dedicated to designing and manufacturing high-quality, budget-friendly electronics, devices and opportunities to the Seychelles.
