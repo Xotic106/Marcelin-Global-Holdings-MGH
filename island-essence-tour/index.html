@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>A Living Creole Experience · Island Essence DMC</title>
+  <meta name="description" content="Follow your one-day cultural discovery tour of Mahé, Seychelles, on an interactive 3D map — by Island Essence DMC." />
+  <meta name="theme-color" content="#0a2f45" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="is-intro">
+
+  <!-- ===== 3D map stage ===== -->
+  <div class="stage" id="stage" aria-hidden="true">
+    <div class="board" id="board">
+      <div class="board-shadow"></div>
+      <div class="board-side side-top"></div>
+      <div class="board-side side-bottom"></div>
+      <div class="board-side side-left"></div>
+      <div class="board-side side-right"></div>
+      <img class="board-terrain" src="assets/map-terrain.jpg" width="1000" height="1200" alt="" draggable="false" />
+      <svg class="board-overlay" id="overlay" viewBox="0 0 1000 1200" width="1000" height="1200">
+        <defs>
+          <path id="maheOutline" d="M 420 70 C 460 70, 500 110, 510 160 C 525 220, 550 262, 570 300 C 580 340, 580 380, 600 420 C 625 470, 640 520, 645 570 C 655 620, 665 680, 680 740 C 695 820, 690 900, 670 960 C 655 1020, 640 1080, 610 1130 C 585 1150, 560 1130, 550 1100 C 535 1050, 510 1010, 490 960 C 465 900, 450 840, 440 780 C 425 720, 400 680, 380 640 C 365 590, 360 540, 370 490 C 340 450, 320 400, 330 350 C 340 300, 342 262, 360 220 C 370 170, 380 110, 420 70 Z"/>
+          <radialGradient id="arrowGlow">
+            <stop offset="0" stop-color="#ffe7a3" stop-opacity=".95"/>
+            <stop offset=".45" stop-color="#f4b942" stop-opacity=".45"/>
+            <stop offset="1" stop-color="#f4b942" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Roads -->
+        <g class="roads">
+          <use href="#maheOutline" transform="translate(515 605) scale(.9 .955) translate(-515 -605)"/>
+          <path d="M545 322 C 500 330, 470 365, 420 345 C 400 380, 390 430, 372 470"/>
+          <path d="M596 452 C 560 470, 520 500, 480 530 C 440 560, 420 590, 400 615"/>
+          <path d="M380 215 C 410 250, 450 235, 480 262 S 530 292, 555 300"/>
+          <path d="M640 690 C 600 720, 560 760, 520 800 C 495 830, 480 850, 462 870"/>
+        </g>
+
+        <!-- Labels -->
+        <g class="labels">
+          <text class="lbl-island" x="0" y="0" transform="translate(498 760) rotate(74)">M A H É</text>
+          <text class="lbl-sea" x="150" y="620">Indian Ocean</text>
+          <text class="lbl-sea" x="760" y="820">Indian Ocean</text>
+          <text class="lbl-peak" x="430" y="300">▲ Morne Seychellois</text>
+          <text class="lbl-peak small" x="438" y="312">905 m</text>
+          <text class="lbl-town" x="584" y="312">Victoria</text>
+          <text class="lbl-town" x="288" y="205">Beau Vallon</text>
+          <text class="lbl-town" x="352" y="368">Sans Souci</text>
+          <text class="lbl-town" x="690" y="676">Au Cap</text>
+          <text class="lbl-place" x="700" y="790">Anse Royale</text>
+          <text class="lbl-place" x="472" y="1040">Takamaka</text>
+          <text class="lbl-place" x="290" y="478">Port Glaud</text>
+          <text class="lbl-place" x="672" y="548">Airport</text>
+          <text class="lbl-place" x="690" y="300">Ste Anne Marine Park</text>
+          <text class="lbl-place" x="112" y="275">Silhouette</text>
+        </g>
+
+        <!-- Route legs are injected here by js/tour.js -->
+        <g id="legs"></g>
+        <g id="rings"></g>
+
+        <!-- Travelling arrow -->
+        <g id="arrow" class="arrow">
+          <circle r="34" fill="url(#arrowGlow)" class="arrow-glow"/>
+          <circle r="15" class="arrow-ring"/>
+          <path d="M 17 0 L -11 -13 L -5 0 L -11 13 Z" class="arrow-head"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="pins" id="pins"></div>
+
+  <!-- ===== Header ===== -->
+  <header class="topbar">
+    <a class="brand" href="#" id="brandHome" aria-label="Island Essence DMC — back to start">
+      <img src="assets/logo.jpg" alt="Island Essence DMC — Destination Management Company" />
+    </a>
+    <div class="topbar-title">
+      <span class="eyebrow">One-day cultural discovery tour · Mahé</span>
+      <strong>A Living Creole Experience</strong>
+    </div>
+    <button class="btn btn-ghost" id="openProgramme" type="button">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+      <span>Today's programme</span>
+    </button>
+  </header>
+
+  <!-- ===== Stop timeline ===== -->
+  <nav class="timeline" id="timeline" aria-label="Tour stops"></nav>
+
+  <!-- ===== Itinerary panel ===== -->
+  <main class="panel" id="panel" aria-live="polite">
+    <div class="panel-scroll" id="panelContent"></div>
+    <div class="panel-nav">
+      <button class="btn btn-quiet" id="prevBtn" type="button" aria-label="Previous stop">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn btn-primary" id="nextBtn" type="button">
+        <span id="nextLabel">Next stop</span>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </main>
+
+  <!-- ===== Intro ===== -->
+  <section class="intro" id="intro" aria-labelledby="introTitle">
+    <div class="intro-card">
+      <img class="intro-logo" src="assets/logo.jpg" alt="Island Essence DMC" />
+      <p class="eyebrow">Island Essence DMC presents</p>
+      <h1 id="introTitle">A Living Creole Experience</h1>
+      <p class="intro-sub">One-Day Cultural Discovery Tour of Mahé</p>
+      <p class="intro-lede">Discover the history, traditions and everyday island life of Seychelles.</p>
+      <ul class="intro-facts">
+        <li><b>8:00 a.m. – 4:30 p.m.</b><span>Full day</span></li>
+        <li><b>4 cultural stops</b><span>+ Creole lunch</span></li>
+        <li><b>Private vehicle</b><span>Driver &amp; guide</span></li>
+      </ul>
+      <div class="intro-actions">
+        <button class="btn btn-primary btn-lg" id="beginBtn" type="button">Begin the journey
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="btn btn-ghost-dark" id="introProgramme" type="button">See the full programme</button>
+      </div>
+      <p class="intro-hint">Use the <kbd>→</kbd> key or the <b>Next stop</b> button to follow the map.</p>
+    </div>
+  </section>
+
+  <!-- ===== Programme modal ===== -->
+  <dialog class="modal" id="programme" aria-labelledby="programmeTitle">
+    <div class="modal-head">
+      <div>
+        <p class="eyebrow">Today's programme</p>
+        <h2 id="programmeTitle">A Living Creole Experience</h2>
+      </div>
+      <button class="icon-btn" data-close type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <ol class="schedule" id="schedule"></ol>
+    <div class="note">
+      <strong>Good to know</strong>
+      <p>Wear comfortable walking shoes, bring sun protection and carry drinking water. All timings are provisional and may shift with traffic, weather and opening hours. The Moutya demonstration and traditional games are subject to advance arrangement.</p>
+    </div>
+  </dialog>
+
+  <!-- ===== Photo lightbox ===== -->
+  <dialog class="lightbox" id="lightbox">
+    <button class="icon-btn" data-close type="button" aria-label="Close photo">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+    <figure><img id="lightboxImg" alt="" /><figcaption id="lightboxCap"></figcaption></figure>
+  </dialog>
+
+  <script src="js/tour.js"></script>
+</body>
+</html>
