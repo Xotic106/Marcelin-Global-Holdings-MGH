@@ -72,7 +72,7 @@
       menu: true,
       photos: [
         { src: 'lunch-menu.jpg', cap: 'Today’s menu card · tap to enlarge', top: true },
-        { src: 'valdespres-veranda.jpg', cap: 'A shaded Creole veranda' },
+        { src: 'maison-marengo.jpg', cap: 'Maison Marengo' },
       ],
       tip: 'Please tell us about any dietary requirements before your tour — the menu is confirmed with Maison Marengo in advance.',
     },
