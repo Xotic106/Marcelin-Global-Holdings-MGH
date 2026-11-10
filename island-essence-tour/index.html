@@ -13,6 +13,9 @@
 </head>
 <body class="is-intro">
 
+  <!-- ===== Open ocean around the map ===== -->
+  <div class="sea" aria-hidden="true"><div class="sea-waves" id="seaWaves"></div></div>
+
   <!-- ===== 3D map stage ===== -->
   <div class="stage" id="stage" aria-hidden="true">
     <div class="board" id="board">
@@ -68,6 +71,27 @@
       <span class="arrow-glow"></span>
       <svg viewBox="-24 -24 48 48" width="48" height="48"><circle r="15" class="arrow-ring"/><path d="M 17 0 L -11 -13 L -5 0 L -11 13 Z" class="arrow-head"/></svg>
     </div>
+  </div>
+
+  <!-- ===== Map controls ===== -->
+  <div class="map-controls" id="mapControls">
+    <button class="map-btn recenter" id="recenterBtn" type="button" aria-label="Back to the tour">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="currentColor"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      <span>Back to tour</span>
+    </button>
+    <div class="zoom-group">
+      <button class="map-btn" id="zoomIn" type="button" aria-label="Zoom in"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+      <button class="map-btn" id="zoomOut" type="button" aria-label="Zoom out"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+  <div class="explore-hint" id="exploreHint" role="status">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10m0-1.5a1.5 1.5 0 0 1 3 0V11m0-1a1.5 1.5 0 0 1 3 0v4.5A6.5 6.5 0 0 1 11.5 21h-.6a6 6 0 0 1-4.6-2.2L3.6 15.5a1.6 1.6 0 0 1 2.3-2.2L9 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Drag the map to explore · scroll or pinch to zoom</span>
+  </div>
+  <div class="sea-banner" id="seaBanner" role="status" aria-live="polite">
+    <span class="sea-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M2 15c2 0 2-1.5 4-1.5S8 15 10 15s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5M2 19.5c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 3v8M8 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    <span id="seaText">You’ve drifted out to open sea.</span>
+    <button class="btn btn-primary" id="seaBack" type="button">Back to the map</button>
   </div>
 
   <!-- ===== Header ===== -->

@@ -287,6 +287,23 @@
     const f = camMatrix.P / (camMatrix.P - p.z);
     return { x: view.ox + (p.x - view.ox) * f, y: view.oy + (p.y - view.oy) * f, f };
   }
+  // Inverse of project(): which map point sits under a screen pixel (null above the horizon).
+  function unproject(sx, sy) {
+    const m = camMatrix.m, P = camMatrix.P, dx = sx - view.ox, dy = sy - view.oy;
+    const a1 = m.m11 * P + dx * m.m13, b1 = m.m21 * P + dx * m.m23, c1 = dx * P - dx * m.m43 - (m.m41 - view.ox) * P;
+    const a2 = m.m12 * P + dy * m.m13, b2 = m.m22 * P + dy * m.m23, c2 = dy * P - dy * m.m43 - (m.m42 - view.oy) * P;
+    const det = a1 * b2 - a2 * b1;
+    if (Math.abs(det) < 1e-9) return null;
+    const x = (c1 * b2 - c2 * b1) / det, y = (a1 * c2 - a2 * c1) / det;
+    return project(x, y).f > 0 ? { x, y } : null;
+  }
+  const seaWaves = $('#seaWaves');
+  function drawSea() {
+    const t = 240, k = cam.s * 0.55;
+    const ox = (((-cam.x * k) % t) + t) % t - t, oy = (((-cam.y * k * 0.6) % t) + t) % t - t;
+    seaWaves.style.transform = `translate(${ox.toFixed(1)}px, ${oy.toFixed(1)}px)`;
+  }
+
   function drawPins() {
     const W = innerWidth, H = innerHeight;
     STOPS.forEach((s, i) => {
@@ -316,6 +333,7 @@
     camMatrix.m = m;
     board.style.transform = m.toString();
     drawPins();
+    drawSea();
   }
 
   function focusStop(i) {
@@ -574,6 +592,7 @@
 
   // ---------------------------------------------------------------- flow
   const state = { cur: 0, traveling: null };
+  const free = { on: false };
 
   function arrive(i, animate) {
     state.cur = i;
@@ -584,9 +603,10 @@
     renderPanel(stopHTML(i));
     syncMarkers();
     updateNav();
+    if (free.on) return;
     if (i === STOPS.length - 1) {
       focusStop(i);
-      setTimeout(() => { if (state.cur === STOPS.length - 1 && !state.traveling) focusOverview(); }, animate ? 1400 : 0);
+      setTimeout(() => { if (state.cur === STOPS.length - 1 && !state.traveling && !free.on) focusOverview(); }, animate ? 1400 : 0);
     } else {
       focusStop(i);
     }
@@ -595,6 +615,7 @@
   function travel(i) {
     const L = legEls[i];
     const dur = reduceMotion ? 300 : clamp(L.len * 9, 1800, 5600);
+    setFree(false);
     state.traveling = { i, start: performance.now(), dur };
     renderPanel(travelHTML(i));
     state.tv = { p: $('#tvProgress'), ic: $('#tvIcon') };
@@ -612,8 +633,10 @@
     const p = ease(t);
     Object.assign(arrowPos, pointOnLeg(T.i, p));
     setLegProgress(T.i, p);
-    target.x = arrowPos.x;
-    target.y = arrowPos.y;
+    if (!free.on) {
+      target.x = arrowPos.x;
+      target.y = arrowPos.y;
+    }
     if (state.tv && state.tv.p) {
       state.tv.p.style.transform = `scaleX(${p.toFixed(4)})`;
       state.tv.ic.style.transform = `translateX(${(p * 100).toFixed(2)}%)`;
@@ -630,6 +653,7 @@
   function goTo(k) {
     k = clamp(k, 0, STOPS.length - 1);
     state.traveling = null;
+    setFree(false);
     legEls.forEach((_, i) => (i < k ? lightLeg(i, false) : unlightLeg(i)));
     arrive(k, k > 0);
   }
@@ -639,14 +663,17 @@
     goTo(0);
   }
 
+  let hinted = false;
   function begin(stop = 0) {
     body.classList.remove('is-intro');
     layout();
     goTo(stop);
+    if (!hinted) { hinted = true; setTimeout(showHint, 1600); }
   }
 
   function resetToIntro() {
     state.traveling = null;
+    setFree(false);
     state.cur = 0;
     legEls.forEach((_, i) => unlightLeg(i));
     placeArrowAtStop(0);
@@ -684,8 +711,163 @@
       drawArrow();
       needsDraw = false;
     }
+    if (free.on) checkSea(now);
     requestAnimationFrame(frame);
   }
+
+  // ---------------------------------------------------------------- explore
+  // Guests can drag, zoom and rotate the map themselves. Any tour action
+  // (Next, a pin, the timeline, Back to tour) hands the camera back.
+  const mapControls = $('#mapControls');
+  const seaBanner = $('#seaBanner');
+  const exploreHint = $('#exploreHint');
+  const BOARD = { w: 1000, h: 1200 };
+  const SOFT = 120;   // how far past the map edge counts as "at sea"
+  const HARD = 520;   // never let the camera wander further than this
+  const sea = { out: false, since: 0, returning: false };
+
+  function setFree(on) {
+    free.on = on;
+    mapControls.classList.toggle('is-free', on);
+    if (!on) showSea(false);
+  }
+  function enterFree() {
+    if (!free.on) setFree(true);
+    sea.returning = false;
+    hideHint();
+  }
+  function syncTarget() {
+    cam.x = clamp(cam.x, -HARD, BOARD.w + HARD);
+    cam.y = clamp(cam.y, -HARD, BOARD.h + HARD);
+    Object.assign(target, cam);
+    applyCamera();
+    drawArrow();
+  }
+  const minZoom = () => view.fitAll * 0.55;
+  const maxZoom = () => 3.4;
+  function zoomAt(sx, sy, factor) {
+    const b0 = unproject(sx, sy);
+    cam.s = clamp(cam.s * factor, minZoom(), maxZoom());
+    applyCamera();
+    const b1 = b0 && unproject(sx, sy);
+    if (b0 && b1) { cam.x += b0.x - b1.x; cam.y += b0.y - b1.y; }
+    syncTarget();
+  }
+  function zoomBy(factor) {
+    if (body.classList.contains('is-intro')) return;
+    enterFree();
+    Object.assign(cam, target);
+    zoomAt(view.ox, view.oy, factor);
+  }
+  function panBy(fromX, fromY, toX, toY) {
+    const a = unproject(fromX, fromY), b = unproject(toX, toY);
+    if (!a || !b) return;
+    cam.x += a.x - b.x;
+    cam.y += a.y - b.y;
+  }
+  function recenter() {
+    setFree(false);
+    sea.returning = false;
+    if (state.traveling) {
+      const i = state.traveling.i;
+      Object.assign(target, { s: LEGS[i].zoom * view.vf, rz: lerp(STOPS[i].rz, STOPS[i + 1].rz, 0.5), tilt: 54 });
+    } else if (state.cur === STOPS.length - 1) focusOverview();
+    else focusStop(state.cur);
+  }
+
+  function showSea(on, msg) {
+    sea.out = on;
+    if (msg) $('#seaText').textContent = msg;
+    seaBanner.classList.toggle('show', on);
+  }
+  function checkSea(now) {
+    const dx = Math.max(-cam.x, cam.x - BOARD.w, 0), dy = Math.max(-cam.y, cam.y - BOARD.h, 0);
+    const out = dx > SOFT || dy > SOFT;
+    if (out && !sea.out) { sea.since = now; showSea(true, 'You’ve drifted out to open sea.'); }
+    if (!out && sea.out && !sea.returning) showSea(false);
+    // left alone at sea for a few seconds: the current carries them back
+    if (out && !pointers.size && !sea.returning && now - Math.max(sea.since, lastTouch) > 3500) sailHome();
+    if (sea.returning && !out) { sea.returning = false; showSea(false); }
+  }
+  function sailHome() {
+    sea.returning = true;
+    showSea(true, 'Sailing you back to Mahé…');
+    target.x = clamp(cam.x, 150, BOARD.w - 150);
+    target.y = clamp(cam.y, 150, BOARD.h - 150);
+    target.s = Math.max(cam.s, view.fitAll);
+  }
+
+  const pointers = new Map();
+  let lastTouch = 0, gesture = null;
+  function gestureInfo() {
+    const pts = [...pointers.values()];
+    const [a, b] = pts;
+    return { mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, d: Math.hypot(b.x - a.x, b.y - a.y), ang: Math.atan2(b.y - a.y, b.x - a.x) };
+  }
+  stage.addEventListener('contextmenu', e => e.preventDefault());
+  stage.addEventListener('pointerdown', e => {
+    if (body.classList.contains('is-intro') || pointers.size >= 2) return;
+    stage.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY, rotate: e.button === 2 || e.shiftKey });
+    lastTouch = performance.now();
+    enterFree();
+    Object.assign(cam, target); // stop any glide where it is
+    stage.classList.add('dragging');
+    if (pointers.size === 2) gesture = gestureInfo();
+  });
+  stage.addEventListener('pointermove', e => {
+    const p = pointers.get(e.pointerId);
+    if (!p) return;
+    lastTouch = performance.now();
+    if (pointers.size === 1) {
+      if (p.rotate) {
+        cam.rz += (e.clientX - p.x) * 0.25;
+        cam.tilt = clamp(cam.tilt - (e.clientY - p.y) * 0.15, 25, 68);
+      } else {
+        panBy(p.x, p.y, e.clientX, e.clientY);
+      }
+      p.x = e.clientX; p.y = e.clientY;
+    } else {
+      p.x = e.clientX; p.y = e.clientY;
+      const g = gestureInfo();
+      if (gesture && gesture.d > 10) {
+        zoomAt(g.mx, g.my, g.d / gesture.d);
+        cam.rz += (g.ang - gesture.ang) * 180 / Math.PI;
+        panBy(gesture.mx, gesture.my, g.mx, g.my);
+      }
+      gesture = g;
+    }
+    syncTarget();
+  });
+  const endPointer = e => {
+    if (!pointers.delete(e.pointerId)) return;
+    gesture = pointers.size === 2 ? gestureInfo() : null;
+    if (!pointers.size) stage.classList.remove('dragging');
+  };
+  stage.addEventListener('pointerup', endPointer);
+  stage.addEventListener('pointercancel', endPointer);
+  stage.addEventListener('wheel', e => {
+    if (body.classList.contains('is-intro')) return;
+    e.preventDefault();
+    lastTouch = performance.now();
+    enterFree();
+    Object.assign(cam, target);
+    const k = e.ctrlKey ? 0.012 : 0.0016; // ctrl = trackpad pinch
+    zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * k));
+  }, { passive: false });
+
+  $('#zoomIn').addEventListener('click', () => zoomBy(1.3));
+  $('#zoomOut').addEventListener('click', () => zoomBy(1 / 1.3));
+  $('#recenterBtn').addEventListener('click', recenter);
+  $('#seaBack').addEventListener('click', recenter);
+
+  let hintTimer = 0;
+  function showHint() {
+    exploreHint.classList.add('show');
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(hideHint, 5000);
+  }
+  function hideHint() { exploreHint.classList.remove('show'); }
 
   // ---------------------------------------------------------------- events
   nextBtn.addEventListener('click', next);
@@ -726,12 +908,15 @@
     }
     if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
     if (e.key === 'ArrowLeft' && !state.traveling && state.cur > 0) goTo(state.cur - 1);
+    if (e.key === '+' || e.key === '=') zoomBy(1.25);
+    if (e.key === '-' || e.key === '_') zoomBy(0.8);
+    if (e.key === 'Escape' && free.on) recenter();
   });
 
   addEventListener('resize', () => {
     layout();
     if (body.classList.contains('is-intro') || state.cur === STOPS.length - 1) focusOverview();
-    else if (!state.traveling) focusStop(state.cur);
+    else if (!state.traveling && !free.on) focusStop(state.cur);
   });
 
   // ---------------------------------------------------------------- start
