@@ -18,7 +18,7 @@ python3 -m http.server 8000   # then visit http://localhost:8000
 ```
 
 It can be hosted on any static host (GitHub Pages, Netlify, Vercel…).
-Add `#stop=3` to the URL to open directly at a given stop (0–7).
+Add `#stop-3` to the URL to open directly at a given stop (0–7).
 
 ## Editing content
 

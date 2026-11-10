@@ -653,7 +653,7 @@
   updateNav();
   requestAnimationFrame(frame);
 
-  // Deep link: index.html#stop=3 opens directly at a stop
-  const m = location.hash.match(/stop=(\d)/);
+  // Deep link: index.html#stop-3 opens directly at a stop
+  const m = location.hash.match(/stop-(\d)/);
   if (m) begin(+m[1]);
 })();
