@@ -25,11 +25,6 @@
       <svg class="board-overlay" id="overlay" viewBox="0 0 1000 1200" width="1000" height="1200">
         <defs>
           <path id="maheOutline" d="M 420 70 C 460 70, 500 110, 510 160 C 525 220, 550 262, 570 300 C 580 340, 580 380, 600 420 C 625 470, 640 520, 645 570 C 655 620, 665 680, 680 740 C 695 820, 690 900, 670 960 C 655 1020, 640 1080, 610 1130 C 585 1150, 560 1130, 550 1100 C 535 1050, 510 1010, 490 960 C 465 900, 450 840, 440 780 C 425 720, 400 680, 380 640 C 365 590, 360 540, 370 490 C 340 450, 320 400, 330 350 C 340 300, 342 262, 360 220 C 370 170, 380 110, 420 70 Z"/>
-          <radialGradient id="arrowGlow">
-            <stop offset="0" stop-color="#ffe7a3" stop-opacity=".95"/>
-            <stop offset=".45" stop-color="#f4b942" stop-opacity=".45"/>
-            <stop offset="1" stop-color="#f4b942" stop-opacity="0"/>
-          </radialGradient>
         </defs>
 
         <!-- Roads -->
@@ -64,17 +59,16 @@
         <g id="legs"></g>
         <g id="rings"></g>
 
-        <!-- Travelling arrow -->
-        <g id="arrow" class="arrow">
-          <circle r="34" fill="url(#arrowGlow)" class="arrow-glow"/>
-          <circle r="15" class="arrow-ring"/>
-          <path d="M 17 0 L -11 -13 L -5 0 L -11 13 Z" class="arrow-head"/>
-        </g>
       </svg>
     </div>
   </div>
   <div class="vignette" aria-hidden="true"></div>
-  <div class="pins" id="pins"></div>
+  <div class="pins" id="pins">
+    <div class="arrow" id="arrow" aria-hidden="true">
+      <span class="arrow-glow"></span>
+      <svg viewBox="-24 -24 48 48" width="48" height="48"><circle r="15" class="arrow-ring"/><path d="M 17 0 L -11 -13 L -5 0 L -11 13 Z" class="arrow-head"/></svg>
+    </div>
+  </div>
 
   <!-- ===== Header ===== -->
   <header class="topbar">

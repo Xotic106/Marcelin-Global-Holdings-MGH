@@ -74,8 +74,7 @@ kbd {
 .board-shadow {
   position: absolute; left: 20px; top: 30px; width: 960px; height: 1160px;
   transform: translateZ(-60px);
-  background: rgba(0, 0, 0, .5);
-  filter: blur(40px);
+  background: radial-gradient(closest-side, rgba(0, 0, 0, .55), rgba(0, 0, 0, .3) 70%, transparent);
   border-radius: 40px;
 }
 .vignette {
@@ -100,18 +99,23 @@ kbd {
 .leg-spark { fill: none; stroke: #fffbe8; stroke-width: 6; stroke-linecap: round; opacity: 0; }
 .leg.lit .leg-glow { stroke-opacity: .32; }
 .leg.lit .leg-trail { stroke: #ffc94a; }
-.leg.next .leg-base { stroke: #ffffff; stroke-opacity: 1; animation: marching 1.2s linear infinite; }
-@keyframes marching { to { stroke-dashoffset: -18; } }
+.leg.next .leg-base { stroke: #ffffff; stroke-opacity: 1; stroke-width: 3.6; }
 
 .ring { fill: none; stroke: var(--gold); stroke-width: 2.5; opacity: 0; transform-box: fill-box; transform-origin: center; }
 .ring-base { fill: rgba(255, 255, 255, .18); stroke: #fff7dd; stroke-width: 2; opacity: .9; }
 .ring-base.visited { fill: rgba(244, 185, 66, .45); stroke: #ffd36b; }
 .ring-base.current { fill: rgba(244, 185, 66, .7); stroke: #fff; }
 
-.arrow { transition: opacity .4s; }
+.arrow { position: absolute; left: 0; top: 0; width: 48px; height: 48px; z-index: 1; will-change: transform; }
+body.is-intro .arrow { opacity: 0; }
+.arrow svg { position: relative; display: block; overflow: visible; }
 .arrow-head { fill: var(--gold); stroke: var(--navy); stroke-width: 2.4; stroke-linejoin: round; }
 .arrow-ring { fill: rgba(15, 39, 71, .55); stroke: #fff; stroke-width: 2; }
-.arrow-glow { animation: arrowPulse 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.arrow-glow {
+  position: absolute; left: -18px; top: -18px; width: 84px; height: 84px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 231, 163, .95), rgba(244, 185, 66, .45) 45%, rgba(244, 185, 66, 0));
+  animation: arrowPulse 1.8s ease-in-out infinite;
+}
 @keyframes arrowPulse { 50% { transform: scale(1.25); opacity: .6; } }
 
 /* Upright pins: projected from map coordinates to the screen in js/tour.js */
@@ -181,10 +185,15 @@ kbd {
 .btn:disabled { opacity: .4; cursor: default; }
 .btn-primary { background: var(--navy); color: #fff; box-shadow: 0 10px 24px -10px rgba(15, 39, 71, .9); }
 .btn-primary:hover:not(:disabled) { background: #173a66; }
-.btn-primary.glow { animation: btnGlow 1.6s ease-in-out infinite; }
-@keyframes btnGlow { 50% { box-shadow: 0 0 0 6px rgba(244, 185, 66, .35), 0 10px 24px -10px rgba(15,39,71,.9); } }
+.btn-primary { position: relative; }
+.btn-primary.glow::after {
+  content: ""; position: absolute; inset: -6px; border-radius: inherit; pointer-events: none;
+  box-shadow: 0 0 0 6px rgba(244, 185, 66, .35); opacity: 0;
+  animation: btnGlow 1.6s ease-in-out infinite;
+}
+@keyframes btnGlow { 50% { opacity: 1; } }
 .btn-lg { padding: 15px 26px; font-size: 16px; }
-.btn-ghost { background: rgba(255, 255, 255, .14); color: #fff; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.25); }
+.btn-ghost { background: rgba(10, 40, 60, .72); color: #fff; border: 1px solid rgba(255,255,255,.25); }
 .btn-ghost:hover { background: rgba(255, 255, 255, .24); }
 .btn-ghost-dark { background: transparent; color: var(--navy); border: 1.5px solid var(--line); }
 .btn-ghost-dark:hover { background: rgba(15, 39, 71, .06); }
@@ -197,8 +206,7 @@ kbd {
   position: fixed; z-index: 15;
   left: 16px; right: calc(var(--panel-w) + 32px); bottom: 16px;
   display: flex; gap: 6px; padding: 8px;
-  background: rgba(8, 30, 46, .55);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  background: rgba(8, 30, 46, .86);
   border: 1px solid rgba(255, 255, 255, .14);
   border-radius: 999px;
   overflow-x: auto; scrollbar-width: none;
@@ -276,8 +284,7 @@ body.is-intro .pin { pointer-events: none; }
 .photo span {
   position: absolute; left: 8px; right: 8px; bottom: 8px;
   font-size: 11px; font-weight: 700; color: #fff; text-align: left;
-  padding: 5px 8px; border-radius: 8px; background: rgba(8, 25, 40, .55);
-  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  padding: 5px 8px; border-radius: 8px; background: rgba(8, 25, 40, .7);
 }
 
 .block-title { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--green); margin: 22px 0 10px; }
@@ -309,8 +316,8 @@ body.is-intro .pin { pointer-events: none; }
 .menu .menu-sub { font-size: 12px; color: var(--ink-soft); margin: 0 0 14px; }
 .menu-course { padding: 10px 0; border-top: 1px dashed rgba(15, 39, 71, .18); }
 .menu-course h4 { margin: 0 0 4px; font-size: 10px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--hibiscus); }
-.menu-course p { margin: 2px 0; font-size: 14px; font-weight: 600; }
-.menu-course p em { display: block; font-family: var(--font-display); font-weight: 500; font-size: 13px; color: var(--ink-soft); }
+.menu-course ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.menu-course li { font-size: 14px; font-weight: 600; }
 .menu-foot { font-size: 11px; color: var(--ink-soft); margin: 10px 0 0; }
 
 /* Travel view */
@@ -325,7 +332,9 @@ body.is-intro .pin { pointer-events: none; }
   animation: road 0.8s linear infinite;
 }
 @keyframes road { to { background-position: -26px 0; } }
-.travel-progress { position: absolute; left: 0; top: 50%; height: 4px; margin-top: -2px; background: var(--gold); box-shadow: 0 0 14px var(--gold); width: 0; }
+.travel-progress { position: absolute; left: 0; right: 0; top: 50%; height: 4px; margin-top: -2px; background: var(--gold); box-shadow: 0 0 14px var(--gold); transform: scaleX(0); transform-origin: 0 50%; }
+.travel-track { position: absolute; left: 30px; right: 30px; top: 0; bottom: 0; }
+.travel-mover { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; will-change: transform; }
 .travel-icon {
   position: absolute; top: 50%; left: 0; width: 46px; height: 46px; margin: -23px 0 0 -23px;
   border-radius: 50%; background: var(--gold); display: grid; place-items: center; color: var(--navy);

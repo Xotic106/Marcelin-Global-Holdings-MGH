@@ -70,7 +70,10 @@
       time: '1:00 – 2:00 p.m.', place: 'Maison Marengo · Domaine de Val des Prés, Au Cap',
       text: 'Time to taste everything you saw at the market this morning. Lunch is a pre-arranged Creole meal, served with stories about local ingredients and cooking traditions.',
       menu: true,
-      photos: [{ src: 'valdespres-veranda.jpg', cap: 'A shaded Creole veranda at Domaine de Val des Prés' }],
+      photos: [
+        { src: 'lunch-menu.jpg', cap: 'Today’s menu card · tap to enlarge', top: true },
+        { src: 'valdespres-veranda.jpg', cap: 'A shaded Creole veranda' },
+      ],
       tip: 'Please tell us about any dietary requirements before your tour — the menu is confirmed with Maison Marengo in advance.',
     },
     {
@@ -136,11 +139,9 @@
   ];
 
   const MENU = [
-    { course: 'From the sea', dish: 'Kari pwason', desc: 'Fish curry with coconut milk and island spices' },
-    { course: 'Island speciality', dish: 'Kari zourit', desc: 'Tender octopus curry' },
-    { course: 'On the side', dish: 'Steamed rice & seasonal vegetables', desc: 'With Creole chutneys' },
-    { course: 'Dessert', dish: 'Ladob', desc: 'Banana or breadfruit simmered in sweet coconut milk' },
-    { course: 'To drink', dish: 'Fresh local fruit juice', desc: 'Drinking water available all day' },
+    { course: 'Appetizer', items: ['Banana chips', 'Breadfruit chips'] },
+    { course: 'Main course', items: ['Plain rice', 'Octopus curry', 'Grilled fish', 'Salted fish chutney with mango', 'Sausage rougail (salted sausage)', 'Lentils with salted meat (pork)'] },
+    { course: 'Dessert', items: ['Banana nougat', 'Coconut flan', 'Daube'] },
   ];
 
   const SCHEDULE = [
@@ -324,8 +325,12 @@
     else Object.assign(arrowPos, pointOnLeg(i - 1, 1));
   }
   function drawArrow() {
-    const k = clamp(1.15 / cam.s, 0.35, 2.4) * view.pinScale;
-    arrow.setAttribute('transform', `translate(${arrowPos.x.toFixed(2)} ${arrowPos.y.toFixed(2)}) rotate(${arrowPos.a.toFixed(1)}) scale(${k.toFixed(3)})`);
+    const rad = arrowPos.a * Math.PI / 180;
+    const p = project(arrowPos.x, arrowPos.y);
+    const q = project(arrowPos.x + Math.cos(rad) * 6, arrowPos.y + Math.sin(rad) * 6);
+    const a = Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI;
+    const k = view.pinScale * clamp(0.75 + p.f * 0.25, 0.8, 1.15);
+    arrow.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px) translate(-50%, -50%) rotate(${a.toFixed(1)}deg) scale(${k.toFixed(3)})`;
   }
 
   // ---------------------------------------------------------------- route state
@@ -394,7 +399,7 @@
   const photosHTML = photos => !photos ? '' :
     `<div class="photos ${photos.length === 1 ? 'single' : ''}">
       ${photos.map(p => `<button class="photo" type="button" data-src="${IMG + p.src}" data-cap="${p.cap}">
-        <img src="${IMG + p.src}" alt="${p.cap}" loading="lazy" /><span>${p.cap}</span></button>`).join('')}
+        <img src="${IMG + p.src}" alt="${p.cap}" loading="lazy" decoding="async"${p.top ? ' style="object-position: top"' : ''} /><span>${p.cap}</span></button>`).join('')}
     </div>`;
 
   const menuHTML = () =>
@@ -402,8 +407,8 @@
       <p class="eyebrow">Maison Marengo</p>
       <h3>Today’s Creole Menu</h3>
       <p class="menu-sub">Served 1:00 – 2:00 p.m.</p>
-      ${MENU.map(m => `<div class="menu-course"><h4>${m.course}</h4><p>${m.dish}<em>${m.desc}</em></p></div>`).join('')}
-      <p class="menu-foot">Sample menu · final dishes confirmed with Maison Marengo before your tour</p>
+      ${MENU.map(m => `<div class="menu-course"><h4>${m.course}</h4><ul>${m.items.map(it => `<li>${it}</li>`).join('')}</ul></div>`).join('')}
+      <p class="menu-foot">Domaine de Val des Prés, Au Cap</p>
     </div>`;
 
   function stopHTML(i) {
@@ -459,7 +464,7 @@
       <div class="travel-visual">
         <div class="travel-road"></div>
         <div class="travel-progress" id="tvProgress"></div>
-        <div class="travel-icon" id="tvIcon">${leg.mode === 'walk' ? ICON.walk : ICON.car}</div>
+        <div class="travel-track"><div class="travel-mover" id="tvIcon"><div class="travel-icon">${leg.mode === 'walk' ? ICON.walk : ICON.car}</div></div></div>
         <div class="travel-ends"><span>${from.short}</span><span>${to.short}</span></div>
       </div>
       <p class="stop-text">${leg.text}</p>
@@ -525,8 +530,8 @@
     target.x = arrowPos.x;
     target.y = arrowPos.y;
     if (state.tv && state.tv.p) {
-      state.tv.p.style.width = (p * 100).toFixed(1) + '%';
-      state.tv.ic.style.left = `calc(${(p * 100).toFixed(1)}% + ${(1 - p) * 30 - p * 30}px)`;
+      state.tv.p.style.transform = `scaleX(${p.toFixed(4)})`;
+      state.tv.ic.style.transform = `translateX(${(p * 100).toFixed(2)}%)`;
     }
     if (t >= 1) arrive(T.i + 1, true);
   }
