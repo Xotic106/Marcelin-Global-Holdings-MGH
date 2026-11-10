@@ -70,6 +70,7 @@
       time: '1:00 – 2:00 p.m.', place: 'Maison Marengo · Domaine de Val des Prés, Au Cap',
       text: 'Time to taste everything you saw at the market this morning. Lunch is a pre-arranged Creole meal, served with stories about local ingredients and cooking traditions.',
       menu: true,
+      dishes: true,
       photos: [
         { src: 'lunch-menu.jpg', cap: 'Today’s menu card · tap to enlarge', top: true },
         { src: 'maison-marengo.jpg', cap: 'Maison Marengo' },
@@ -142,6 +143,22 @@
     { course: 'Appetizer', items: ['Banana chips', 'Breadfruit chips'] },
     { course: 'Main course', items: ['Plain rice', 'Octopus curry', 'Grilled fish', 'Salted fish chutney with mango', 'Sausage rougail (salted sausage)', 'Lentils with salted meat (pork)'] },
     { course: 'Dessert', items: ['Banana nougat', 'Coconut flan', 'Daube'] },
+  ];
+
+  // Dishes shown in the Maison Marengo carousel (Creole name · English)
+  const DISHES = [
+    ['chips-bannan', 'Chips bannan', 'Banana chips'],
+    ['chips-friyapen', 'Chips friyapen', 'Breadfruit chips'],
+    ['kari-zourit', 'Kari zourit', 'Octopus curry'],
+    ['pwason-griye', 'Pwason griye', 'Grilled fish'],
+    ['satini-pwason-sale', 'Satini pwason sale ek mang', 'Salted fish chutney with mango'],
+    ['rougay-sosis-sale', 'Rougay sosis sale', 'Salted sausage rougail'],
+    ['lantir-lavyann-sale', 'Lantir lavyann sale', 'Lentils with salted pork'],
+    ['nouga-bannan', 'Nouga bannan', 'Banana nougat'],
+    ['gato-bannan', 'Gato bannan', 'Banana fritters'],
+    ['ladob', 'Ladob', 'Sweet simmered in coconut milk'],
+    ['lafarin-mai', 'Lafarin mai', 'Cornmeal cake'],
+    ['flan-koko', 'Flan koko', 'Coconut flan'],
   ];
 
   const SCHEDULE = [
@@ -452,6 +469,7 @@
       ${s.extra ? `<p class="block-title">${s.extra.time} · ${s.extra.title}</p><p class="stop-text">${s.extra.text}</p>` : ''}
       ${s.quote ? `<blockquote class="quote">“${s.quote}”<footer>From your guide</footer></blockquote>` : ''}
       ${s.tip ? `<div class="tip">${ICON.info}<span>${s.tip}</span></div>` : ''}
+      ${s.dishes ? dishesHTML() : ''}
     </div>`;
   }
 
@@ -471,9 +489,76 @@
     </div>`;
   }
 
+  function dishCard(d, clone) {
+    const [file, name, en] = d;
+    return `<button class="dish" type="button" data-src="${IMG}dishes/${file}.jpg" data-cap="${name} · ${en}"${clone ? ' tabindex="-1" aria-hidden="true"' : ''}>
+      <img src="${IMG}dishes/${file}.jpg" alt="${clone ? '' : `${name} (${en})`}" loading="lazy" decoding="async" width="280" height="280" />
+      <span class="dish-name">${name}</span><span class="dish-en">${en}</span>
+    </button>`;
+  }
+  const dishesHTML = () =>
+    `<section class="dishes" aria-label="Dishes from the Maison Marengo kitchen">
+      <div class="dishes-head">
+        <p class="block-title">From the kitchen</p>
+        <div class="dishes-arrows">
+          <button class="dish-arrow" type="button" data-dir="-1" aria-label="Previous dish"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="dish-arrow" type="button" data-dir="1" aria-label="Next dish"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+      <div class="dishes-track" tabindex="0">
+        ${DISHES.map(d => dishCard(d, false)).join('')}${DISHES.map(d => dishCard(d, true)).join('')}
+      </div>
+    </section>`;
+
+  // Endless, gently drifting carousel. Pauses while the guest hovers, touches,
+  // scrolls or focuses it, then picks up again a few seconds later.
+  const carousel = { el: null, raf: 0, pausedUntil: 0, pos: 0, last: 0 };
+  function startCarousel() {
+    cancelAnimationFrame(carousel.raf);
+    const track = panelContent.querySelector('.dishes-track');
+    carousel.el = track;
+    if (!track) return;
+    carousel.pos = track.scrollLeft;
+    const pause = ms => { carousel.pausedUntil = performance.now() + ms; };
+    let hovering = false;
+    track.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') hovering = true; });
+    track.addEventListener('pointerleave', () => { hovering = false; pause(800); });
+    ['pointerdown', 'wheel', 'touchstart', 'focusin'].forEach(t => track.addEventListener(t, () => pause(3500), { passive: true }));
+    track.addEventListener('scroll', () => {
+      const half = track.scrollWidth / 2;
+      if (track.scrollLeft >= half) track.scrollLeft -= half;
+      else if (track.scrollLeft <= 0 && carousel.pausedUntil > performance.now()) track.scrollLeft += half;
+      carousel.pos = track.scrollLeft;
+    }, { passive: true });
+    track.closest('.dishes').querySelectorAll('.dish-arrow').forEach(b => b.addEventListener('click', () => {
+      pause(4000);
+      const step = track.querySelector('.dish').offsetWidth + 12;
+      if (b.dataset.dir === '-1' && track.scrollLeft < step) track.scrollLeft += track.scrollWidth / 2;
+      track.scrollBy({ left: step * +b.dataset.dir, behavior: reduceMotion ? 'auto' : 'smooth' });
+    }));
+    if (reduceMotion) return;
+    carousel.last = performance.now();
+    const tick = now => {
+      if (carousel.el !== track || !track.isConnected) return;
+      const dt = Math.min(64, now - carousel.last);
+      carousel.last = now;
+      if (!hovering && now > carousel.pausedUntil && !document.hidden) {
+        carousel.pos += dt * 0.035; // ~35 px per second
+        const half = track.scrollWidth / 2;
+        if (carousel.pos >= half) carousel.pos -= half;
+        track.scrollLeft = carousel.pos;
+      } else {
+        carousel.pos = track.scrollLeft;
+      }
+      carousel.raf = requestAnimationFrame(tick);
+    };
+    carousel.raf = requestAnimationFrame(tick);
+  }
+
   function renderPanel(html) {
     panelContent.innerHTML = html;
     panelContent.scrollTop = 0;
+    startCarousel();
   }
 
   function updateNav() {
@@ -622,7 +707,7 @@
 
   const lightbox = $('#lightbox');
   panelContent.addEventListener('click', e => {
-    const ph = e.target.closest('.photo');
+    const ph = e.target.closest('.photo, .dish');
     if (!ph) return;
     $('#lightboxImg').src = ph.dataset.src;
     $('#lightboxImg').alt = ph.dataset.cap;
