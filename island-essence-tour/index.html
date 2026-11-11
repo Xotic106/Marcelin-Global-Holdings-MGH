@@ -25,46 +25,9 @@
       <div class="board-side side-left"></div>
       <div class="board-side side-right"></div>
       <img class="board-terrain" src="assets/map-terrain.jpg" width="1000" height="1200" alt="" draggable="false" />
-      <svg class="board-overlay" id="overlay" viewBox="0 0 1000 1200" width="1000" height="1200">
-        <defs>
-          <path id="maheOutline" d="M 420 70 C 460 70, 500 110, 510 160 C 525 220, 550 262, 570 300 C 580 340, 580 380, 600 420 C 625 470, 640 520, 645 570 C 655 620, 665 680, 680 740 C 695 820, 690 900, 670 960 C 655 1020, 640 1080, 610 1130 C 585 1150, 560 1130, 550 1100 C 535 1050, 510 1010, 490 960 C 465 900, 450 840, 440 780 C 425 720, 400 680, 380 640 C 365 590, 360 540, 370 490 C 340 450, 320 400, 330 350 C 340 300, 342 262, 360 220 C 370 170, 380 110, 420 70 Z"/>
-        </defs>
-
-        <!-- Roads -->
-        <g class="roads">
-          <use href="#maheOutline" transform="translate(515 605) scale(.9 .955) translate(-515 -605)"/>
-          <path d="M545 322 C 500 330, 470 365, 420 345 C 400 380, 390 430, 372 470"/>
-          <path d="M596 452 C 560 470, 520 500, 480 530 C 440 560, 420 590, 400 615"/>
-          <path d="M380 215 C 410 250, 450 235, 480 262 S 530 292, 555 300"/>
-          <path d="M640 690 C 600 720, 560 760, 520 800 C 495 830, 480 850, 462 870"/>
-        </g>
-
-        <!-- Labels -->
-        <g class="labels">
-          <text class="lbl-island" x="0" y="0" transform="translate(498 760) rotate(74)">M A H É</text>
-          <text class="lbl-sea" x="150" y="620">Indian Ocean</text>
-          <text class="lbl-sea" x="760" y="820">Indian Ocean</text>
-          <text class="lbl-peak" x="430" y="300">▲ Morne Seychellois</text>
-          <text class="lbl-peak small" x="438" y="312">905 m</text>
-          <text class="lbl-town" x="584" y="312">Victoria</text>
-          <text class="lbl-town" x="288" y="205">Beau Vallon</text>
-          <text class="lbl-town" x="352" y="368">Sans Souci</text>
-          <text class="lbl-town" x="690" y="676">Au Cap</text>
-          <text class="lbl-place" x="700" y="790">Anse Royale</text>
-          <text class="lbl-place" x="472" y="1040">Takamaka</text>
-          <text class="lbl-place" x="290" y="478">Port Glaud</text>
-          <text class="lbl-place" x="672" y="548">Airport</text>
-          <text class="lbl-place" x="690" y="300">Ste Anne Marine Park</text>
-          <text class="lbl-place" x="112" y="275">Silhouette</text>
-        </g>
-
-        <!-- Route legs are injected here by js/tour.js -->
-        <g id="legs"></g>
-        <g id="rings"></g>
-
-      </svg>
     </div>
   </div>
+  <canvas class="route-canvas" id="routeCanvas" aria-hidden="true"></canvas>
   <div class="vignette" aria-hidden="true"></div>
   <div class="pins" id="pins">
     <div class="arrow" id="arrow" aria-hidden="true">
@@ -175,6 +138,7 @@
     <figure><img id="lightboxImg" alt="" /><figcaption id="lightboxCap"></figcaption></figure>
   </dialog>
 
+  <script src="js/map-geo.js"></script>
   <script src="js/tour.js"></script>
 </body>
 </html>

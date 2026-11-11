@@ -6,7 +6,10 @@ the day, and the pathway lights up as each destination is reached. A side panel
 (or bottom sheet on phones) shows the time, description, photos and — at lunch —
 the Creole menu for each stop.
 
-The map is illustrative, not GPS-accurate.
+The map is built from real elevation data for Mahé (AWS Terrain Tiles: SRTM
+land heights and GEBCO bathymetry), so the coastline, mountains and scale are
+real. Stops are at their real locations; the roads between them are traced by
+hand along the terrain, so they are close to, but not exactly on, the real roads.
 
 ## Run it
 
@@ -26,8 +29,8 @@ All itinerary text, times, photos, the lunch menu and the full programme live at
 the top of `js/tour.js` (`STOPS`, `LEGS`, `MENU`, `SCHEDULE`).
 
 - **Photos** go in `assets/img/` and are referenced by file name in `STOPS[].photos`.
-- **Map positions** are `x`/`y` in board units (the map is 1000 × 1200).
-  Route shapes are SVG path strings in `LEGS[].d`.
+- **Map positions, routes, roads and labels** are set in latitude/longitude at the
+  top of `tools/build_map.py`. Re-run it after changing them (see below).
 
 ## Files
 
@@ -36,6 +39,6 @@ the top of `js/tour.js` (`STOPS`, `LEGS`, `MENU`, `SCHEDULE`).
 | `index.html` | Page structure |
 | `css/style.css` | Styles, including the responsive layout |
 | `js/tour.js` | Itinerary data and the map/camera/arrow engine |
-| `assets/map-terrain.jpg` | Pre-rendered relief map |
-| `tools/terrain.svg` | Source artwork for the relief map |
-| `tools/render-terrain.js` | Re-renders the map image (`node tools/render-terrain.js`, needs Playwright) |
+| `assets/map-terrain.jpg` | Relief map rendered from real elevation data |
+| `js/map-geo.js` | Generated stop positions, routes, roads and labels |
+| `tools/build_map.py` | Rebuilds both of the above: `python3 tools/build_map.py` (needs numpy, scipy, scikit-image, Pillow; downloads elevation tiles on first run) |
